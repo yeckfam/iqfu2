@@ -1,0 +1,33 @@
+mount /dev/sda1 /mnt
+cd /mnt
+
+cp golden/boardData_1_0_IPQ4019_DK04_2G.bin /lib/firmware/IPQ4019/hw.1/
+cp golden/boardData_1_0_IPQ4019_DK04_2G.bin /lib/firmware/IPQ4019/hw.1/boarddata_0.bin 
+cp golden/boardData_1_0_IPQ4019_DK04_5G.bin /lib/firmware/IPQ4019/hw.1/boarddata_1.bin 
+cp golden/boardData_1_0_IPQ4019_DK04_5G.bin /lib/firmware/IPQ4019/hw.1/
+
+cp golden/boardData_2_0_QCA9888_5G_Y9690_SBS_HB.bin /lib/firmware/QCA9888/hw.2/
+cp golden/boardData_2_0_QCA9888_5G_Y9690_SBS_HB.bin /lib/firmware/QCA9888/hw.2/boarddata_2.bin
+cp golden/boardData_2_0_QCA9888_5G_Y9690_SBS_HB.bin /lib/firmware/QCA9888/hw.2/boarddata_0.bin
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+devmem 0x580d8
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+setenv bootcmd "usb start && fatload usb 0:1 0x84000000 eero-dakota-image && bootm"
+setenv bootargs
+saveenv
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ifconfig eth0 down
+brctl addbr br-lan
+ifconfig br-lan 192.168.1.1
+brctl addif br-lan eth0
+ifconfig eth0 up
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+stressapptest -s 1800 -M 300 -m 3 -W > stress.txt 2>&1 &
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mount /dev/sda1 /mnt
+mount /dev/sdb1 /mnt
+cd /mnt
+chmod 777 test_usb.sh
+./test_usb.sh &

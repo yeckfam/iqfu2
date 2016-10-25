@@ -1,0 +1,5 @@
+To aggregate:
+python iqfu.py aggregate /Users/fan/Dropbox\ \(eero\)/eero\ Hardware/26.\ Test\ Results/dvt2/tx/E5980055/Ambient   -o aggregated/E5980055-ambient
+
+To graph:
+python iqfu.py graph aggregated/E5980055-ambient/WIFI_11AC_TX_MULTI_VERIFICATION.csv -o graphs/E5980055-ambient
